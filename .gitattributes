@@ -1,0 +1,10 @@
+# Preserve exact source and delivered binary bytes across Windows checkouts.
+* -text
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.bmp binary
+*.BMP binary
+*.wav binary
+*.WAV binary
+*.bit binary

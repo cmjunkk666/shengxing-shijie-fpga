@@ -1,0 +1,9 @@
+{
+  "photo_file": "stream.jpg",
+  "photo_crop": [0, 0, 360, 205],
+  "photo_credit": "NPS / Great Smoky Mountains National Park",
+  "photo_page": "https://www.nps.gov/grsm/planyourvisit/waterfalls.htm",
+  "photo_license": "NPS credited work, public domain under NPS ownership policy",
+  "photo_scope": "取实拍 Ramsey Cascades 照片上部流水局部，作为山间流水场景示意；音频为另行录制的小溪，并非该瀑布现场声。",
+  "provenance_files": ["waterfall_photo.html"]
+}

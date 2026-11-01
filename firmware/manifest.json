@@ -1,0 +1,23 @@
+{
+  "file": "caption_scroll_hdmi_a.bit",
+  "sha256": "362f49e07204b9f4585458bd7e08a704b54be70bce8449fde23dac6bb7a3e356",
+  "build_date": "2026-10-04",
+  "target": "EG4S20BG256",
+  "hdmi_port": "A",
+  "default_mode": "MAN",
+  "default_visualization": "LEVEL",
+  "default_subtitle_scroll": true,
+  "resources": {
+    "lut": 14499,
+    "registers": 7908,
+    "bram9k": 48,
+    "dsp": 11,
+    "pll": 2
+  },
+  "timing_under_existing_constraints": {
+    "setup_wns_ns": 0.105,
+    "hold_wns_ns": 0.014,
+    "reported_setup_hold_pass": true
+  },
+  "note": "Prebuilt firmware preserved from the existing project. This upload does not recompile or retest the FPGA on hardware."
+}

@@ -1,0 +1,52 @@
+# Python / editor caches
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.DS_Store
+Thumbs.db
+~$*
+.recent_user_depot.ini
+
+# TD / ModelSim generated working data
+*_Runs/
+compile_runs/
+log/
+*.log
+*.logw
+*.db
+*.wlf
+*.vcd
+*.bak
+/verification/out/
+/verification/results*/
+/verification/static_*/
+/verification/td_*/
+/verification/gallery_diagnosis_*/
+_backup/
+
+# Historical build folders. Final delivered bit is in firmware/.
+/build_*/
+
+# Explicitly excluded from this upload
+*.pdf
+*.doc
+*.docx
+*.ppt
+*.pptx
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.rar
+*.zip
+*.7z
+演示视频/
+修改过程/
+
+# Local credentials and environment files
+.env
+.env.*
+*.pem
+*.key
+hosts.yml

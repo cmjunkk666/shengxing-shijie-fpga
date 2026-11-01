@@ -1,0 +1,421 @@
+{
+  "version": "nature_sound_large_short_v4_20260921",
+  "source_pack": "C:\\Users\\23774\\Desktop\\ANlu\\task_one\\creating_works\\lab_ex5_i2s\\content\\声形视界_自然声音主题_短版_v3_20260921",
+  "firmware": "C:\\Users\\23774\\Desktop\\ANlu\\task_one\\creating_works\\lab_ex5_i2s\\build_nature_captions_20260921\\nature_captions_hdmi_a.bit",
+  "firmware_sha256": "9610a63f5f89fd8b5e3219c273195a9c3e3b796d237e211f3ab52a40f91a2d43",
+  "files": [
+    {
+      "file": "AUDIO1.WAV",
+      "bytes": 1287132,
+      "sha256": "7f34e900bf93bbbc6f5457161719081ab3199ed8fd06e6d6126529e96e7e2a1a"
+    },
+    {
+      "file": "AUDIO2.WAV",
+      "bytes": 1617164,
+      "sha256": "c3c6e0439b7f5a4e5ee8122aca9deccc436412e1ca6e8f68fcbd3bd410baf268"
+    },
+    {
+      "file": "AUDIO3.WAV",
+      "bytes": 1604514,
+      "sha256": "c244eb3557ca17624dc767d0a0b83b53a3034d456d44c95b5695092e2c108933"
+    },
+    {
+      "file": "AUDIO4.WAV",
+      "bytes": 1785838,
+      "sha256": "bbae48cba9347c0023b6a9b4455652e3d3e9f59b92fa8a0faa2b90728831d308"
+    },
+    {
+      "file": "PIC1.BMP",
+      "bytes": 921654,
+      "sha256": "ab0b4a9ea10727111daabf293f7ac159617990cfade6e9f58ed7ba91aaa0a439"
+    },
+    {
+      "file": "PIC2.BMP",
+      "bytes": 921654,
+      "sha256": "77d2e7c227caffb1ff4a2047ede09d55aceac6cbcd04f7e35a32dcef54bf286d"
+    },
+    {
+      "file": "PIC3.BMP",
+      "bytes": 921654,
+      "sha256": "d3e729ab05330e5ac81e5394a9bbbdd3d542e12daca99c0f1ccf97a9ba2332c7"
+    },
+    {
+      "file": "PIC4.BMP",
+      "bytes": 921654,
+      "sha256": "7beae5e4f964c39e50e6854e64492362d69841f8fd23b28e3651524c249ce0e4"
+    }
+  ],
+  "rtl_changed": false,
+  "firmware_changed": false,
+  "card_written": false,
+  "hardware_tested": false,
+  "images_unchanged": false,
+  "long_pack_unchanged": true,
+  "manual_playback": "one shot, then silence; REPLAY restarts",
+  "autoplay": "WAV completion plus 5 or 10 seconds dwell, then next image",
+  "audio_summary": [
+    {
+      "id": 1,
+      "title": "林间鸟鸣",
+      "old_duration": 32.22660416666667,
+      "duration": 13.407166666666667,
+      "timeline": [
+        {
+          "start_sample": 0,
+          "end_sample": 9600,
+          "start": 0.0,
+          "end": 0.2,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 9600,
+          "end_sample": 154698,
+          "start": 0.2,
+          "end": 3.222875,
+          "label": "林间鸟鸣，留意短促音节。",
+          "kind": "narration"
+        },
+        {
+          "start_sample": 154698,
+          "end_sample": 169098,
+          "start": 3.222875,
+          "end": 3.522875,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 169098,
+          "end_sample": 318614,
+          "start": 3.522875,
+          "end": 6.637791666666667,
+          "label": "真实自然录音",
+          "kind": "recording",
+          "original_start_seconds": 0.0,
+          "original_end_seconds": 3.114916666666667,
+          "source_preview": "source/processed_originals/nature1.wav"
+        },
+        {
+          "start_sample": 318614,
+          "end_sample": 342614,
+          "start": 6.637791666666667,
+          "end": 7.137791666666667,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 342614,
+          "end_sample": 492130,
+          "start": 7.137791666666667,
+          "end": 10.252708333333333,
+          "label": "同一鸟鸣录音再次播放",
+          "kind": "recording",
+          "original_start_seconds": 0.0,
+          "original_end_seconds": 3.114916666666667,
+          "source_preview": "source/processed_originals/nature1.wav"
+        },
+        {
+          "start_sample": 492130,
+          "end_sample": 508930,
+          "start": 10.252708333333333,
+          "end": 10.602708333333334,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 508930,
+          "end_sample": 619544,
+          "start": 10.602708333333334,
+          "end": 12.907166666666667,
+          "label": "每次鸣叫的间隔一样吗？",
+          "kind": "narration"
+        },
+        {
+          "start_sample": 619544,
+          "end_sample": 643544,
+          "start": 12.907166666666667,
+          "end": 13.407166666666667,
+          "label": "停顿",
+          "kind": "silence"
+        }
+      ],
+      "recording_duration": 3.114916666666667,
+      "recording_repetitions": 2,
+      "nature_start_seconds": 3.522875,
+      "peak_sample": 26214,
+      "clipping_samples": 0,
+      "sample_rate": 48000,
+      "channels": 1,
+      "bits": 16,
+      "original_nature_samples_preserved_except_new_edge_fades": true,
+      "recording_segments_match_preview": true
+    },
+    {
+      "id": 2,
+      "title": "池塘蛙鸣",
+      "old_duration": 36.919625,
+      "duration": 16.845,
+      "timeline": [
+        {
+          "start_sample": 0,
+          "end_sample": 9600,
+          "start": 0.0,
+          "end": 0.2,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 9600,
+          "end_sample": 151499,
+          "start": 0.2,
+          "end": 3.156229166666667,
+          "label": "池塘蛙鸣，听重复的叫声。",
+          "kind": "narration"
+        },
+        {
+          "start_sample": 151499,
+          "end_sample": 165899,
+          "start": 3.156229166666667,
+          "end": 3.4562291666666667,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 165899,
+          "end_sample": 679499,
+          "start": 3.4562291666666667,
+          "end": 14.156229166666666,
+          "label": "真实自然录音",
+          "kind": "recording",
+          "original_start_seconds": 0.0,
+          "original_end_seconds": 10.7,
+          "source_preview": "source/processed_originals/nature2.wav"
+        },
+        {
+          "start_sample": 679499,
+          "end_sample": 696299,
+          "start": 14.156229166666666,
+          "end": 14.506229166666667,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 696299,
+          "end_sample": 784560,
+          "start": 14.506229166666667,
+          "end": 16.345,
+          "label": "你听出了什么节奏？",
+          "kind": "narration"
+        },
+        {
+          "start_sample": 784560,
+          "end_sample": 808560,
+          "start": 16.345,
+          "end": 16.845,
+          "label": "停顿",
+          "kind": "silence"
+        }
+      ],
+      "recording_duration": 10.7,
+      "recording_repetitions": 1,
+      "nature_start_seconds": 3.4562291666666667,
+      "peak_sample": 26214,
+      "clipping_samples": 0,
+      "sample_rate": 48000,
+      "channels": 1,
+      "bits": 16,
+      "original_nature_samples_preserved_except_new_edge_fades": true,
+      "recording_segments_match_preview": true
+    },
+    {
+      "id": 3,
+      "title": "山间流水",
+      "old_duration": 37.31964583333333,
+      "duration": 16.713229166666668,
+      "timeline": [
+        {
+          "start_sample": 0,
+          "end_sample": 9600,
+          "start": 0.0,
+          "end": 0.2,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 9600,
+          "end_sample": 148984,
+          "start": 0.2,
+          "end": 3.103833333333333,
+          "label": "山间流水，听连续的水声。",
+          "kind": "narration"
+        },
+        {
+          "start_sample": 148984,
+          "end_sample": 163384,
+          "start": 3.103833333333333,
+          "end": 3.4038333333333335,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 163384,
+          "end_sample": 643384,
+          "start": 3.4038333333333335,
+          "end": 13.403833333333333,
+          "label": "真实自然录音",
+          "kind": "recording",
+          "original_start_seconds": 0.0,
+          "original_end_seconds": 10.0,
+          "source_preview": "source/processed_originals/nature3.wav"
+        },
+        {
+          "start_sample": 643384,
+          "end_sample": 660184,
+          "start": 13.403833333333333,
+          "end": 13.753833333333333,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 660184,
+          "end_sample": 778235,
+          "start": 13.753833333333333,
+          "end": 16.213229166666668,
+          "label": "它会像鸟鸣那样停顿吗？",
+          "kind": "narration"
+        },
+        {
+          "start_sample": 778235,
+          "end_sample": 802235,
+          "start": 16.213229166666668,
+          "end": 16.713229166666668,
+          "label": "停顿",
+          "kind": "silence"
+        }
+      ],
+      "recording_duration": 10.0,
+      "recording_repetitions": 1,
+      "nature_start_seconds": 3.4038333333333335,
+      "peak_sample": 22282,
+      "clipping_samples": 0,
+      "sample_rate": 48000,
+      "channels": 1,
+      "bits": 16,
+      "original_nature_samples_preserved_except_new_edge_fades": true,
+      "recording_segments_match_preview": true
+    },
+    {
+      "id": 4,
+      "title": "远处雷声",
+      "old_duration": 34.3414375,
+      "duration": 18.602020833333334,
+      "timeline": [
+        {
+          "start_sample": 0,
+          "end_sample": 9600,
+          "start": 0.0,
+          "end": 0.2,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 9600,
+          "end_sample": 140706,
+          "start": 0.2,
+          "end": 2.931375,
+          "label": "远处雷声，听低沉的滚动。",
+          "kind": "narration"
+        },
+        {
+          "start_sample": 140706,
+          "end_sample": 155106,
+          "start": 2.931375,
+          "end": 3.231375,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 155106,
+          "end_sample": 695394,
+          "start": 3.231375,
+          "end": 14.487375,
+          "label": "真实自然录音",
+          "kind": "recording",
+          "original_start_seconds": 0.0,
+          "original_end_seconds": 11.256,
+          "source_preview": "source/processed_originals/nature4.wav"
+        },
+        {
+          "start_sample": 695394,
+          "end_sample": 712194,
+          "start": 14.487375,
+          "end": 14.837375,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 712194,
+          "end_sample": 868897,
+          "start": 14.837375,
+          "end": 18.102020833333334,
+          "label": "雷声的起伏，和流水声一样吗？",
+          "kind": "narration"
+        },
+        {
+          "start_sample": 868897,
+          "end_sample": 892897,
+          "start": 18.102020833333334,
+          "end": 18.602020833333334,
+          "label": "停顿",
+          "kind": "silence"
+        }
+      ],
+      "recording_duration": 11.256,
+      "recording_repetitions": 1,
+      "nature_start_seconds": 3.231375,
+      "peak_sample": 26214,
+      "clipping_samples": 0,
+      "sample_rate": 48000,
+      "channels": 1,
+      "bits": 16,
+      "original_nature_samples_preserved_except_new_edge_fades": true,
+      "recording_segments_match_preview": true
+    }
+  ],
+  "autoplay_cycle_seconds_excluding_transitions": 85.56741666666667,
+  "validation": {
+    "all_bmp_wav_formats_pass": true,
+    "recording_segments_match_preview": true,
+    "no_digital_clipping": true,
+    "all_preview_links_exist": true,
+    "hardware_tested": false,
+    "human_audition_pending": true
+  },
+  "provenance": "Real CC0 recordings and separately sourced photos; source credits and license pages retained.",
+  "limitations": [
+    "Not microphone input or FPGA speech recognition.",
+    "Subtitles remain editable observation prompts, not word-synchronized narration.",
+    "Recorded volume is not calibrated natural sound pressure."
+  ],
+  "preview_sha256": "e03a1146378e66402d7bb13e473c4ce289c94747bef07b7491d1c575f94d9307",
+  "short_audio_unchanged": true,
+  "previous_pack_unchanged": true,
+  "image_layout": {
+    "previous_photo_size": [
+      328,
+      200
+    ],
+    "photo_size": [
+      440,
+      200
+    ],
+    "area_increase_percent": 34.15,
+    "changed_region": [
+      0,
+      74,
+      640,
+      284
+    ],
+    "outside_region_pixels_unchanged": true
+  }
+}

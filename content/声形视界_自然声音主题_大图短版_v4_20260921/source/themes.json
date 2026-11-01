@@ -1,0 +1,866 @@
+[
+  {
+    "id": 1,
+    "title": "林间鸟鸣",
+    "en": "BIRDSONG",
+    "key": "robin",
+    "color": "#ffc479",
+    "feature": "清脆音节 · 音调多变",
+    "lines": [
+      "先听短促的鸣叫音节",
+      "再听音调如何起落",
+      "比较每次鸣叫的间隔"
+    ],
+    "concept": "听短促音节和音调变化，认识自然声音的多样性。",
+    "prompt": "想一想：每个鸣叫音节都一样吗？",
+    "question": "鸟鸣为什么听起来像由不同的音节组成？",
+    "answer": "所选录音包含欧亚鸲的鸣叫片段，音调随时间变化，音节之间也有停顿。本页将同一段真实录音播放两次，方便比较。当前板上窗口主要观察声音起伏，不能仅凭曲线粗细准确判断音高。",
+    "intro": "林间鸟鸣，留意短促音节。",
+    "labels": [],
+    "closing": "每次鸣叫的间隔一样吗？",
+    "source_start": 0,
+    "source_end": null,
+    "repeat": true,
+    "photo_note": "欧亚鸲实拍",
+    "audio_page": "https://bigsoundbank.com/robin-4-s1670.html",
+    "audio_credit": "Joseph SARDIN / BigSoundBank, Robin #4 (1670)",
+    "photo_file": "robin_alt2.jpg",
+    "photo_crop": [
+      300,
+      230,
+      780,
+      523
+    ],
+    "photo_credit": "Alexis_lsu (alexis_loiseau) / iNaturalist, photo 464120215",
+    "photo_page": "https://www.inaturalist.org/observations/258652563",
+    "photo_license": "CC0 1.0",
+    "photo_scope": "欧亚鸲（Erithacus rubecula）实拍照片；照片和录音来自不同地点与时间。",
+    "audio": {
+      "duration": 13.407166666666667,
+      "timeline": [
+        {
+          "start_sample": 0,
+          "end_sample": 9600,
+          "start": 0.0,
+          "end": 0.2,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 9600,
+          "end_sample": 154698,
+          "start": 0.2,
+          "end": 3.222875,
+          "label": "林间鸟鸣，留意短促音节。",
+          "kind": "narration"
+        },
+        {
+          "start_sample": 154698,
+          "end_sample": 169098,
+          "start": 3.222875,
+          "end": 3.522875,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 169098,
+          "end_sample": 318614,
+          "start": 3.522875,
+          "end": 6.637791666666667,
+          "label": "真实自然录音",
+          "kind": "recording",
+          "original_start_seconds": 0.0,
+          "original_end_seconds": 3.114916666666667,
+          "source_preview": "source/processed_originals/nature1.wav"
+        },
+        {
+          "start_sample": 318614,
+          "end_sample": 342614,
+          "start": 6.637791666666667,
+          "end": 7.137791666666667,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 342614,
+          "end_sample": 492130,
+          "start": 7.137791666666667,
+          "end": 10.252708333333333,
+          "label": "同一鸟鸣录音再次播放",
+          "kind": "recording",
+          "original_start_seconds": 0.0,
+          "original_end_seconds": 3.114916666666667,
+          "source_preview": "source/processed_originals/nature1.wav"
+        },
+        {
+          "start_sample": 492130,
+          "end_sample": 508930,
+          "start": 10.252708333333333,
+          "end": 10.602708333333334,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 508930,
+          "end_sample": 619544,
+          "start": 10.602708333333334,
+          "end": 12.907166666666667,
+          "label": "每次鸣叫的间隔一样吗？",
+          "kind": "narration"
+        },
+        {
+          "start_sample": 619544,
+          "end_sample": 643544,
+          "start": 12.907166666666667,
+          "end": 13.407166666666667,
+          "label": "停顿",
+          "kind": "silence"
+        }
+      ],
+      "recording_duration": 3.114916666666667,
+      "recording_repetitions": 2,
+      "nature_start_seconds": 3.522875,
+      "peak_sample": 26214,
+      "clipping_samples": 0,
+      "sample_rate": 48000,
+      "channels": 1,
+      "bits": 16,
+      "original_nature_samples_preserved_except_new_edge_fades": true,
+      "recording_segments_match_preview": true
+    },
+    "short_edit": {
+      "intro": "林间鸟鸣，留意短促音节。",
+      "closing": "每次鸣叫的间隔一样吗？",
+      "source_start": 0,
+      "source_end": null,
+      "repeats": 2,
+      "repeat_gap": 0.5,
+      "target": [
+        12,
+        15
+      ]
+    },
+    "long_version_duration": 32.22660416666667,
+    "layout": {
+      "photo_box": [
+        16,
+        80,
+        456,
+        280
+      ],
+      "right_column_brief_lines": [
+        "听短促的音节",
+        "观察音节停顿",
+        "比较鸣叫间隔"
+      ],
+      "text_boxes": [
+        {
+          "text": "01 / 自然声景",
+          "box": [
+            472.0,
+            83.0,
+            546.3333333333334,
+            94.66666666666667
+          ]
+        },
+        {
+          "text": "林间鸟鸣",
+          "box": [
+            472.0,
+            116.0,
+            576.0,
+            141.66666666666666
+          ]
+        },
+        {
+          "text": "清脆音节",
+          "box": [
+            472.0,
+            159.0,
+            536.0,
+            174.33333333333334
+          ]
+        },
+        {
+          "text": "音调多变",
+          "box": [
+            472.0,
+            180.0,
+            536.0,
+            196.33333333333334
+          ]
+        },
+        {
+          "text": "听短促的音节",
+          "box": [
+            479.0,
+            211.0,
+            569.0,
+            225.66666666666666
+          ]
+        },
+        {
+          "text": "观察音节停顿",
+          "box": [
+            479.0,
+            234.0,
+            569.0,
+            248.66666666666666
+          ]
+        },
+        {
+          "text": "比较鸣叫间隔",
+          "box": [
+            479.0,
+            257.0,
+            569.0,
+            271.6666666666667
+          ]
+        },
+        {
+          "text": "欧亚鸲实拍",
+          "box": [
+            34.0,
+            254.0,
+            94.0,
+            265.6666666666667
+          ]
+        }
+      ],
+      "firmware_overlay_regions_unchanged": true
+    }
+  },
+  {
+    "id": 2,
+    "title": "池塘蛙鸣",
+    "en": "FROG CALL",
+    "key": "onefrog",
+    "color": "#91df9b",
+    "feature": "重复叫声 · 分段起伏",
+    "lines": [
+      "辨认重复出现的叫声",
+      "听一听叫声的节奏",
+      "观察声音的强弱变化"
+    ],
+    "concept": "一只蛙在池塘附近鸣叫，留意反复出现的声音模式。",
+    "prompt": "想一想：蛙鸣和刚才的鸟鸣，听起来有什么不同？",
+    "question": "这段蛙鸣与鸟鸣有什么区别？",
+    "answer": "这段单只蛙鸣有重复出现的声音模式，主要能量所在频段比本包鸟鸣低一些。录音来源未标明蛙的具体物种，因此不根据配图给录音确定物种；配图仅为蛙类场景示意。比较针对这两段录音，不能推广成所有鸟都比所有蛙叫得高。",
+    "intro": "池塘蛙鸣，听重复的叫声。",
+    "labels": [],
+    "closing": "你听出了什么节奏？",
+    "source_start": 0,
+    "source_end": null,
+    "repeat": false,
+    "photo_note": "蛙类场景示意",
+    "photo_crop": [
+      340,
+      95,
+      940,
+      444
+    ],
+    "audio_page": "https://bigsoundbank.com/one-frog-s0819.html",
+    "audio_credit": "Joseph SARDIN / BigSoundBank, One frog (0819)",
+    "photo_credit": "NPS / Neal Herbert",
+    "photo_page": "https://www.nps.gov/yell/learn/photosmultimedia/sounds-chorusfrogs.htm",
+    "photo_license": "NPS credited work, public domain under NPS ownership policy",
+    "photo_scope": "配图为 Boreal chorus frog。录音的蛙未标注物种；配图仅作蛙类场景示意，不表示声源鉴定。",
+    "photo_file": "frog.jpg",
+    "audio": {
+      "duration": 16.845,
+      "timeline": [
+        {
+          "start_sample": 0,
+          "end_sample": 9600,
+          "start": 0.0,
+          "end": 0.2,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 9600,
+          "end_sample": 151499,
+          "start": 0.2,
+          "end": 3.156229166666667,
+          "label": "池塘蛙鸣，听重复的叫声。",
+          "kind": "narration"
+        },
+        {
+          "start_sample": 151499,
+          "end_sample": 165899,
+          "start": 3.156229166666667,
+          "end": 3.4562291666666667,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 165899,
+          "end_sample": 679499,
+          "start": 3.4562291666666667,
+          "end": 14.156229166666666,
+          "label": "真实自然录音",
+          "kind": "recording",
+          "original_start_seconds": 0.0,
+          "original_end_seconds": 10.7,
+          "source_preview": "source/processed_originals/nature2.wav"
+        },
+        {
+          "start_sample": 679499,
+          "end_sample": 696299,
+          "start": 14.156229166666666,
+          "end": 14.506229166666667,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 696299,
+          "end_sample": 784560,
+          "start": 14.506229166666667,
+          "end": 16.345,
+          "label": "你听出了什么节奏？",
+          "kind": "narration"
+        },
+        {
+          "start_sample": 784560,
+          "end_sample": 808560,
+          "start": 16.345,
+          "end": 16.845,
+          "label": "停顿",
+          "kind": "silence"
+        }
+      ],
+      "recording_duration": 10.7,
+      "recording_repetitions": 1,
+      "nature_start_seconds": 3.4562291666666667,
+      "peak_sample": 26214,
+      "clipping_samples": 0,
+      "sample_rate": 48000,
+      "channels": 1,
+      "bits": 16,
+      "original_nature_samples_preserved_except_new_edge_fades": true,
+      "recording_segments_match_preview": true
+    },
+    "short_edit": {
+      "intro": "池塘蛙鸣，听重复的叫声。",
+      "closing": "你听出了什么节奏？",
+      "source_start": 0,
+      "source_end": 10.7,
+      "repeats": 1,
+      "repeat_gap": 0,
+      "target": [
+        15,
+        18
+      ]
+    },
+    "long_version_duration": 36.919625,
+    "layout": {
+      "photo_box": [
+        16,
+        80,
+        456,
+        280
+      ],
+      "right_column_brief_lines": [
+        "辨认重复叫声",
+        "听叫声的节奏",
+        "观察强弱变化"
+      ],
+      "text_boxes": [
+        {
+          "text": "02 / 自然声景",
+          "box": [
+            472.0,
+            83.0,
+            546.3333333333334,
+            94.66666666666667
+          ]
+        },
+        {
+          "text": "池塘蛙鸣",
+          "box": [
+            472.0,
+            116.0,
+            576.0,
+            141.0
+          ]
+        },
+        {
+          "text": "重复叫声",
+          "box": [
+            472.0,
+            159.0,
+            536.0,
+            174.66666666666666
+          ]
+        },
+        {
+          "text": "分段起伏",
+          "box": [
+            472.0,
+            180.0,
+            536.0,
+            196.33333333333334
+          ]
+        },
+        {
+          "text": "辨认重复叫声",
+          "box": [
+            479.0,
+            211.0,
+            569.0,
+            225.66666666666666
+          ]
+        },
+        {
+          "text": "听叫声的节奏",
+          "box": [
+            479.0,
+            234.0,
+            569.0,
+            248.66666666666666
+          ]
+        },
+        {
+          "text": "观察强弱变化",
+          "box": [
+            479.0,
+            257.0,
+            569.0,
+            271.6666666666667
+          ]
+        },
+        {
+          "text": "蛙类场景示意",
+          "box": [
+            34.0,
+            254.0,
+            106.0,
+            266.0
+          ]
+        }
+      ],
+      "firmware_overlay_regions_unchanged": true
+    }
+  },
+  {
+    "id": 3,
+    "title": "山间流水",
+    "en": "FLOWING WATER",
+    "key": "stream",
+    "color": "#80d6ff",
+    "feature": "持续流动 · 细碎变化",
+    "lines": [
+      "听持续不断的流水声",
+      "分辨细碎的水声变化",
+      "观察连续起伏的波形"
+    ],
+    "concept": "流动的水产生许多细碎声音，组成持续的自然声景。",
+    "prompt": "想一想：流水声会像鸟鸣那样，一声一声地停顿吗？",
+    "question": "溪流声为什么与动物鸣叫听起来不同？",
+    "answer": "这段溪流录音较连续，包含较宽频率范围的声音，而不是单一稳定音调。与短促鸟鸣相比，不容易找到清楚分开的音节。画面中的动态波形来自播放的音频，不是图片生成的动画。",
+    "intro": "山间流水，听连续的水声。",
+    "labels": [],
+    "closing": "它会像鸟鸣那样停顿吗？",
+    "source_start": 10,
+    "source_end": 24,
+    "repeat": false,
+    "photo_note": "流水场景示意",
+    "audio_page": "https://bigsoundbank.com/small-stream-4-s1354.html",
+    "audio_credit": "Joseph SARDIN / BigSoundBank, Small Stream #4 (1354)",
+    "photo_credit": "NPS / Great Smoky Mountains National Park",
+    "photo_page": "https://www.nps.gov/grsm/planyourvisit/waterfalls.htm",
+    "photo_license": "NPS credited work, public domain under NPS ownership policy",
+    "photo_scope": "取实拍 Ramsey Cascades 照片上部流水局部，作为山间流水场景示意；音频为另行录制的小溪，并非该瀑布现场声。",
+    "photo_file": "stream.jpg",
+    "photo_crop": [
+      0,
+      0,
+      360,
+      205
+    ],
+    "provenance_files": [
+      "waterfall_photo.html"
+    ],
+    "audio": {
+      "duration": 16.713229166666668,
+      "timeline": [
+        {
+          "start_sample": 0,
+          "end_sample": 9600,
+          "start": 0.0,
+          "end": 0.2,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 9600,
+          "end_sample": 148984,
+          "start": 0.2,
+          "end": 3.103833333333333,
+          "label": "山间流水，听连续的水声。",
+          "kind": "narration"
+        },
+        {
+          "start_sample": 148984,
+          "end_sample": 163384,
+          "start": 3.103833333333333,
+          "end": 3.4038333333333335,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 163384,
+          "end_sample": 643384,
+          "start": 3.4038333333333335,
+          "end": 13.403833333333333,
+          "label": "真实自然录音",
+          "kind": "recording",
+          "original_start_seconds": 0.0,
+          "original_end_seconds": 10.0,
+          "source_preview": "source/processed_originals/nature3.wav"
+        },
+        {
+          "start_sample": 643384,
+          "end_sample": 660184,
+          "start": 13.403833333333333,
+          "end": 13.753833333333333,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 660184,
+          "end_sample": 778235,
+          "start": 13.753833333333333,
+          "end": 16.213229166666668,
+          "label": "它会像鸟鸣那样停顿吗？",
+          "kind": "narration"
+        },
+        {
+          "start_sample": 778235,
+          "end_sample": 802235,
+          "start": 16.213229166666668,
+          "end": 16.713229166666668,
+          "label": "停顿",
+          "kind": "silence"
+        }
+      ],
+      "recording_duration": 10.0,
+      "recording_repetitions": 1,
+      "nature_start_seconds": 3.4038333333333335,
+      "peak_sample": 22282,
+      "clipping_samples": 0,
+      "sample_rate": 48000,
+      "channels": 1,
+      "bits": 16,
+      "original_nature_samples_preserved_except_new_edge_fades": true,
+      "recording_segments_match_preview": true
+    },
+    "short_edit": {
+      "intro": "山间流水，听连续的水声。",
+      "closing": "它会像鸟鸣那样停顿吗？",
+      "source_start": 0,
+      "source_end": 10,
+      "repeats": 1,
+      "repeat_gap": 0,
+      "target": [
+        15,
+        18
+      ]
+    },
+    "long_version_duration": 37.31964583333333,
+    "layout": {
+      "photo_box": [
+        16,
+        80,
+        456,
+        280
+      ],
+      "right_column_brief_lines": [
+        "听连续流水声",
+        "分辨细碎变化",
+        "观察持续起伏"
+      ],
+      "text_boxes": [
+        {
+          "text": "03 / 自然声景",
+          "box": [
+            472.0,
+            83.0,
+            546.3333333333334,
+            94.66666666666667
+          ]
+        },
+        {
+          "text": "山间流水",
+          "box": [
+            472.0,
+            116.0,
+            576.0,
+            141.66666666666666
+          ]
+        },
+        {
+          "text": "持续流动",
+          "box": [
+            472.0,
+            159.0,
+            536.0,
+            175.0
+          ]
+        },
+        {
+          "text": "细碎变化",
+          "box": [
+            472.0,
+            180.0,
+            536.0,
+            195.66666666666666
+          ]
+        },
+        {
+          "text": "听连续流水声",
+          "box": [
+            479.0,
+            211.0,
+            569.0,
+            226.0
+          ]
+        },
+        {
+          "text": "分辨细碎变化",
+          "box": [
+            479.0,
+            234.0,
+            569.0,
+            248.66666666666666
+          ]
+        },
+        {
+          "text": "观察持续起伏",
+          "box": [
+            479.0,
+            257.0,
+            569.0,
+            271.6666666666667
+          ]
+        },
+        {
+          "text": "流水场景示意",
+          "box": [
+            34.0,
+            254.0,
+            106.0,
+            265.6666666666667
+          ]
+        }
+      ],
+      "firmware_overlay_regions_unchanged": true
+    }
+  },
+  {
+    "id": 4,
+    "title": "远处雷声",
+    "en": "THUNDER",
+    "key": "thunder",
+    "color": "#c6afff",
+    "feature": "低沉滚动 · 起伏衰减",
+    "lines": [
+      "听雷声的低沉滚动",
+      "观察突然增强的起伏",
+      "再听余声逐渐减弱"
+    ],
+    "concept": "一段真实雷声录音，呈现明显的起伏和逐渐减弱的余声。",
+    "prompt": "想一想：雷声与持续的溪流声，强弱变化有什么不同？",
+    "question": "为什么雷声听起来更低沉，波形起伏也更明显？",
+    "answer": "这段雷声录音以低频成分为主，并有明显的时间起伏。它经过试听增益调整，不代表自然雷声的实际声压，也不能用它与其他录音比较真实响度。照片中的闪电只是天气场景示意，不代表与声音精确同步的那次闪电。",
+    "intro": "远处雷声，听低沉的滚动。",
+    "labels": [],
+    "closing": "雷声的起伏，和流水声一样吗？",
+    "source_start": 0,
+    "source_end": null,
+    "repeat": false,
+    "photo_note": "天气场景示意",
+    "audio_page": "https://bigsoundbank.com/thunder-3-s3114.html",
+    "audio_credit": "Joseph SARDIN & Axeline T. / BigSoundBank, Thunder #3 (3114)",
+    "photo_credit": "NPS / Neal Herbert",
+    "photo_page": "https://www.nps.gov/yell/learn/photosmultimedia/sounds-thunder.htm",
+    "photo_license": "NPS credited work, public domain under NPS ownership policy",
+    "photo_scope": "实拍雷暴天气配图，与雷声录音不是同一事件；不代表逐帧音画同步。",
+    "photo_file": "thunder.jpg",
+    "audio": {
+      "duration": 18.602020833333334,
+      "timeline": [
+        {
+          "start_sample": 0,
+          "end_sample": 9600,
+          "start": 0.0,
+          "end": 0.2,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 9600,
+          "end_sample": 140706,
+          "start": 0.2,
+          "end": 2.931375,
+          "label": "远处雷声，听低沉的滚动。",
+          "kind": "narration"
+        },
+        {
+          "start_sample": 140706,
+          "end_sample": 155106,
+          "start": 2.931375,
+          "end": 3.231375,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 155106,
+          "end_sample": 695394,
+          "start": 3.231375,
+          "end": 14.487375,
+          "label": "真实自然录音",
+          "kind": "recording",
+          "original_start_seconds": 0.0,
+          "original_end_seconds": 11.256,
+          "source_preview": "source/processed_originals/nature4.wav"
+        },
+        {
+          "start_sample": 695394,
+          "end_sample": 712194,
+          "start": 14.487375,
+          "end": 14.837375,
+          "label": "停顿",
+          "kind": "silence"
+        },
+        {
+          "start_sample": 712194,
+          "end_sample": 868897,
+          "start": 14.837375,
+          "end": 18.102020833333334,
+          "label": "雷声的起伏，和流水声一样吗？",
+          "kind": "narration"
+        },
+        {
+          "start_sample": 868897,
+          "end_sample": 892897,
+          "start": 18.102020833333334,
+          "end": 18.602020833333334,
+          "label": "停顿",
+          "kind": "silence"
+        }
+      ],
+      "recording_duration": 11.256,
+      "recording_repetitions": 1,
+      "nature_start_seconds": 3.231375,
+      "peak_sample": 26214,
+      "clipping_samples": 0,
+      "sample_rate": 48000,
+      "channels": 1,
+      "bits": 16,
+      "original_nature_samples_preserved_except_new_edge_fades": true,
+      "recording_segments_match_preview": true
+    },
+    "short_edit": {
+      "intro": "远处雷声，听低沉的滚动。",
+      "closing": "雷声的起伏，和流水声一样吗？",
+      "source_start": 0,
+      "source_end": null,
+      "repeats": 1,
+      "repeat_gap": 0,
+      "target": [
+        18,
+        20
+      ]
+    },
+    "long_version_duration": 34.3414375,
+    "layout": {
+      "photo_box": [
+        16,
+        80,
+        456,
+        280
+      ],
+      "right_column_brief_lines": [
+        "听低沉滚动声",
+        "观察突然增强",
+        "留意余声衰减"
+      ],
+      "text_boxes": [
+        {
+          "text": "04 / 自然声景",
+          "box": [
+            472.0,
+            83.0,
+            546.3333333333334,
+            94.66666666666667
+          ]
+        },
+        {
+          "text": "远处雷声",
+          "box": [
+            472.0,
+            116.0,
+            576.0,
+            141.33333333333334
+          ]
+        },
+        {
+          "text": "低沉滚动",
+          "box": [
+            472.0,
+            159.0,
+            536.0,
+            175.0
+          ]
+        },
+        {
+          "text": "起伏衰减",
+          "box": [
+            472.0,
+            180.0,
+            536.0,
+            196.0
+          ]
+        },
+        {
+          "text": "听低沉滚动声",
+          "box": [
+            479.0,
+            211.0,
+            569.0,
+            225.66666666666666
+          ]
+        },
+        {
+          "text": "观察突然增强",
+          "box": [
+            479.0,
+            234.0,
+            569.0,
+            248.66666666666666
+          ]
+        },
+        {
+          "text": "留意余声衰减",
+          "box": [
+            479.0,
+            257.0,
+            569.0,
+            272.0
+          ]
+        },
+        {
+          "text": "天气场景示意",
+          "box": [
+            34.0,
+            254.0,
+            106.0,
+            265.6666666666667
+          ]
+        }
+      ],
+      "firmware_overlay_regions_unchanged": true
+    }
+  }
+]

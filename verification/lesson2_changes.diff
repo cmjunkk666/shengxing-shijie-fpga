@@ -1,0 +1,862 @@
+--- before/src/user_source/hdl_source/SD/sd_card_bmp.v
++++ after/src/user_source/hdl_source/SD/sd_card_bmp.v
+@@ -1,115 +1,106 @@
+-
++// Lesson 2: event-driven keys, one pending direction and runtime dwell time.
+ module sd_card_bmp #(
+-    parameter integer CLK_FREQ_HZ       = 100_000_000,
+-    parameter [31:0]  SCAN_START_SECTOR = 32'd0,
+-    parameter [31:0]  SCAN_MAX_SECTOR   = 32'd131071,
+-    parameter [2:0]   SCAN_TARGET_COUNT = 3'd4
++    parameter integer CLK_FREQ_HZ = 100_000_000,
++    parameter [31:0] SCAN_START_SECTOR = 32'd0,
++    parameter [31:0] SCAN_MAX_SECTOR = 32'd131071,
++    parameter [2:0] SCAN_TARGET_COUNT = 3'd4,
++    parameter integer DEBOUNCE_MS = 20,
++    parameter integer LONG_PRESS_MS = 1000
+ )(
+-    input                       clk,
+-    input                       rst,
+-    input                       key_next,
+-    input                       key_auto,
+-    output [3:0]                state_code,
+-    input  [15:0]               bmp_width,
+-    input  [15:0]               bmp_height,
+-    output reg                  display_valid,
+-
+-    input                       write_finish_toggle,
+-    output reg [1:0]            write_buf_idx,
+-    output reg [1:0]            disp_buf_idx,
+-
+-    output                      write_req,
+-    input                       write_req_ack,
+-    output                      write_en,
+-    output [31:0]               write_data,
+-    output                      SD_nCS,
+-    output                      SD_DCLK,
+-    output                      SD_MOSI,
+-    input                       SD_MISO
++    input wire clk, rst,
++    input wire key_next, key_auto,
++    output wire [3:0] state_code,
++    input wire [15:0] bmp_width, bmp_height,
++    output reg display_valid,
++    input wire write_finish_toggle,
++    output reg [1:0] write_buf_idx, disp_buf_idx,
++    output wire write_req,
++    input wire write_req_ack,
++    output wire write_en,
++    output wire [31:0] write_data,
++    output wire SD_nCS, SD_DCLK, SD_MOSI,
++    input wire SD_MISO,
++    output wire [2:0] picture_number, picture_count,
++    output wire auto_enabled,
++    output wire [3:0] period_seconds,
++    output wire loading, scan_complete
+ );
+ 
+-wire key_next_press;
+-wire key_auto_press;
+-
+-wire             sd_sec_read;
+-wire [31:0]      sd_sec_read_addr;
+-wire [7:0]       sd_sec_read_data;
+-wire             sd_sec_read_data_valid;
+-wire             sd_sec_read_end;
+-wire             bmp_data_wr_en;
+-wire [23:0]      bmp_data;
+-wire             sd_init_done;
+-wire             bmp_ready;
+-wire             scan_done;
+-wire             scan_found_valid;
+-wire [31:0]      scan_found_sector;
+-wire [2:0]       scan_found_total;
+-
+-reg              scan_start_pulse;
+-reg              load_start_pulse;
+-reg [31:0]       load_sector;
+-reg              scan_kicked;
+-reg              first_image_committed;
+-reg              auto_play_en;
+-reg [31:0]       auto_cnt;
+-reg [2:0]        img_found_count;
+-reg [1:0]        img_idx;              // 当前真正显示中的图片编号
+-reg [1:0]        load_idx;             // 当前正在写入的图片编号
+-reg [1:0]        pending_buf_idx;      // 当前正在写入的目标缓冲区
+-reg [31:0]       img_sector0;
+-reg [31:0]       img_sector1;
+-reg [31:0]       img_sector2;
+-reg [31:0]       img_sector3;
+-reg              next_req_pending;
+-reg              load_busy;
+-
+-// bmp_ready 先表示“源文件读取/送 FIFO 完成”；真正切显示要等 write_finish_toggle 同步后
+-reg              source_done_seen;
+-
+-// 同步 mem_clk 域的 write_finish_toggle
+-reg [2:0]        wrfin_tgl_sync;
+-wire             write_finish_pulse;
+-
+-wire auto_tick;
+-wire [1:0] next_from_current;
+-
+-assign write_en   = bmp_data_wr_en;
+-assign write_data = {bmp_data[23:16], bmp_data[15:8], bmp_data[7:0], 8'b0};
+-assign auto_tick  = (auto_cnt == (CLK_FREQ_HZ - 1));
+-assign next_from_current = next_index_limited(img_idx, img_found_count);
+-assign write_finish_pulse = wrfin_tgl_sync[2] ^ wrfin_tgl_sync[1];
+-
+-key_press_debounce #(
+-    .CLK_FREQ_HZ (CLK_FREQ_HZ),
+-    .DEBOUNCE_MS (20)
+-) u_key_next (
+-    .clk        (clk),
+-    .rst        (rst),
+-    .button_in  (key_next),
+-    .press_pulse(key_next_press)
++wire next_event, prev_event, toggle_auto_event, cycle_period_event;
++wire interaction_active;
++key_events #(
++    .CLK_FREQ_HZ(CLK_FREQ_HZ), .DEBOUNCE_MS(DEBOUNCE_MS),
++    .LONG_PRESS_MS(LONG_PRESS_MS)
++) u_key_events (
++    .clk(clk), .rst(rst), .key1_n(key_next), .key2_n(key_auto),
++    .next_event(next_event), .prev_event(prev_event),
++    .toggle_auto_event(toggle_auto_event), .cycle_period_event(cycle_period_event),
++    .interaction_active(interaction_active)
+ );
+ 
+-key_press_debounce #(
+-    .CLK_FREQ_HZ (CLK_FREQ_HZ),
+-    .DEBOUNCE_MS (20)
+-) u_key_auto (
+-    .clk        (clk),
+-    .rst        (rst),
+-    .button_in  (key_auto),
+-    .press_pulse(key_auto_press)
+-);
+-
+-function [1:0] next_index_limited;
+-    input [1:0] cur;
++wire sd_sec_read, sd_sec_read_data_valid, sd_sec_read_end;
++wire [31:0] sd_sec_read_addr;
++wire [7:0] sd_sec_read_data;
++wire bmp_data_wr_en;
++wire [23:0] bmp_data;
++wire sd_init_done, bmp_ready, scan_done, scan_found_valid;
++wire [31:0] scan_found_sector;
++wire [2:0] scan_found_total;
++
++reg scan_start_pulse, load_start_pulse, scan_kicked;
++reg [31:0] load_sector;
++reg first_image_committed, auto_play_en, load_busy;
++reg [2:0] img_found_count;
++reg [1:0] img_idx, load_idx, pending_buf_idx;
++reg [31:0] img_sector0, img_sector1, img_sector2, img_sector3;
++localparam [1:0] REQ_NONE = 0, REQ_NEXT = 1, REQ_PREV = 2;
++reg [1:0] pending_request;
++reg [1:0] period_index;
++localparam integer CYCLES_PER_MS = (CLK_FREQ_HZ >= 1000) ? CLK_FREQ_HZ / 1000 : 1;
++localparam integer MS_BITS = (CYCLES_PER_MS < 2) ? 1 : $clog2(CYCLES_PER_MS);
++reg [MS_BITS-1:0] ms_divider;
++reg [13:0] elapsed_ms;
++wire [13:0] period_ms = (period_index == 0) ? 14'd3000 :
++                       (period_index == 1) ? 14'd5000 : 14'd10000;
++wire ms_tick = (ms_divider == CYCLES_PER_MS - 1);
++wire auto_due = ms_tick && (elapsed_ms >= period_ms - 1'b1);
++wire user_event = next_event || prev_event || toggle_auto_event || cycle_period_event;
++
++// Each completion is remembered independently; arrival order cannot lose a pulse.
++// Observe busy before treating bmp_ready as completion (it is also high before start).
++reg source_started_seen, source_done_seen, write_done_seen;
++reg [2:0] wrfin_tgl_sync;
++wire write_finish_pulse = wrfin_tgl_sync[2] ^ wrfin_tgl_sync[1];
++wire frame_complete = load_busy && source_done_seen &&
++                      (write_done_seen || write_finish_pulse);
++wire [1:0] requested_direction = next_event ? REQ_NEXT :
++                                 prev_event ? REQ_PREV : pending_request;
++wire can_navigate = scan_done && display_valid && (img_found_count > 1);
++wire timer_enable = can_navigate && auto_play_en && !load_busy &&
++                    !interaction_active && !user_event && (pending_request == REQ_NONE);
++wire [1:0] target_idx = adjacent_index(img_idx, img_found_count,
++                                     requested_direction == REQ_PREV);
++
++assign write_en = bmp_data_wr_en;
++assign write_data = {bmp_data, 8'b0};
++assign picture_number = display_valid ? ({1'b0, img_idx} + 3'd1) : 3'd0;
++assign picture_count = img_found_count;
++assign auto_enabled = auto_play_en;
++assign period_seconds = (period_index == 0) ? 4'd3 : (period_index == 1) ? 4'd5 : 4'd10;
++assign loading = load_busy;
++assign scan_complete = scan_done;
++
++function [1:0] adjacent_index;
++    input [1:0] current_idx;
+     input [2:0] count;
++    input previous;
+     begin
+-        case (count)
+-            3'd0: next_index_limited = 2'd0;
+-            3'd1: next_index_limited = 2'd0;
+-            3'd2: next_index_limited = (cur == 2'd1) ? 2'd0 : (cur + 2'd1);
+-            3'd3: next_index_limited = (cur == 2'd2) ? 2'd0 : (cur + 2'd1);
+-            default: next_index_limited = (cur == 2'd3) ? 2'd0 : (cur + 2'd1);
+-        endcase
++        if (count <= 1)
++            adjacent_index = 0;
++        else if (previous)
++            adjacent_index = (current_idx == 0) ? (count - 3'd1) : current_idx - 2'd1;
++        else
++            adjacent_index = ({1'b0, current_idx} + 3'd1 >= count) ? 2'd0 : current_idx + 2'd1;
+     end
+ endfunction
+ 
+@@ -117,177 +108,162 @@
+     input [1:0] idx;
+     begin
+         case (idx)
+-            2'd0: sector_lut = img_sector0;
+-            2'd1: sector_lut = img_sector1;
+-            2'd2: sector_lut = img_sector2;
+-            2'd3: sector_lut = img_sector3;
+-            default: sector_lut = img_sector0;
++            0: sector_lut = img_sector0;
++            1: sector_lut = img_sector1;
++            2: sector_lut = img_sector2;
++            default: sector_lut = img_sector3;
+         endcase
+     end
+ endfunction
+ 
+-function [1:0] next_buf_lut;
+-    input [1:0] cur_disp_buf;
+-    input       valid_now;
+-    begin
+-        if (!valid_now)
+-            next_buf_lut = 2'd0;                 // 首图固定写 buffer0
+-        else if (cur_disp_buf == 2'd0)
+-            next_buf_lut = 2'd1;
+-        else
+-            next_buf_lut = 2'd0;
+-    end
+-endfunction
++always @(posedge clk or posedge rst) begin
++    if (rst) wrfin_tgl_sync <= 0;
++    else wrfin_tgl_sync <= {wrfin_tgl_sync[1:0], write_finish_toggle};
++end
+ 
+ always @(posedge clk or posedge rst) begin
+     if (rst) begin
+-        wrfin_tgl_sync        <= 3'b000;
+-        scan_start_pulse      <= 1'b0;
+-        load_start_pulse      <= 1'b0;
+-        load_sector           <= 32'd0;
+-        scan_kicked           <= 1'b0;
+-        first_image_committed <= 1'b0;
+-        auto_play_en          <= 1'b0;
+-        auto_cnt              <= 32'd0;
+-        img_found_count       <= 3'd0;
+-        img_idx               <= 2'd0;
+-        load_idx              <= 2'd0;
+-        pending_buf_idx       <= 2'd0;
+-        write_buf_idx         <= 2'd0;
+-        disp_buf_idx          <= 2'd0;
+-        img_sector0           <= 32'd0;
+-        img_sector1           <= 32'd0;
+-        img_sector2           <= 32'd0;
+-        img_sector3           <= 32'd0;
+-        next_req_pending      <= 1'b0;
+-        load_busy             <= 1'b0;
+-        source_done_seen      <= 1'b0;
+-        display_valid         <= 1'b0;
++        ms_divider <= 0;
++        elapsed_ms <= 0;
++    end else if (!sd_init_done || !timer_enable || frame_complete) begin
++        ms_divider <= 0;
++        elapsed_ms <= 0;
++    end else if (ms_tick) begin
++        ms_divider <= 0;
++        // Saturate until a new load starts; do not miss expiry if source is not ready.
++        if (elapsed_ms < period_ms - 1'b1) elapsed_ms <= elapsed_ms + 1'b1;
++    end else
++        ms_divider <= ms_divider + 1'b1;
++end
++
++always @(posedge clk or posedge rst) begin
++    if (rst) begin
++        scan_start_pulse <= 0;
++        load_start_pulse <= 0;
++        load_sector <= 0;
++        scan_kicked <= 0;
++        first_image_committed <= 0;
++        auto_play_en <= 0;
++        img_found_count <= 0;
++        img_idx <= 0;
++        load_idx <= 0;
++        pending_buf_idx <= 0;
++        write_buf_idx <= 0;
++        disp_buf_idx <= 0;
++        img_sector0 <= 0;
++        img_sector1 <= 0;
++        img_sector2 <= 0;
++        img_sector3 <= 0;
++        pending_request <= REQ_NONE;
++        period_index <= 0;
++        load_busy <= 0;
++        source_started_seen <= 0;
++        source_done_seen <= 0;
++        write_done_seen <= 0;
++        display_valid <= 0;
+     end else begin
+-        wrfin_tgl_sync   <= {wrfin_tgl_sync[1:0], write_finish_toggle};
+-        scan_start_pulse <= 1'b0;
+-        load_start_pulse <= 1'b0;
+-
++        scan_start_pulse <= 0;
++        load_start_pulse <= 0;
+         if (!sd_init_done) begin
+-            scan_kicked           <= 1'b0;
+-            first_image_committed <= 1'b0;
+-            auto_play_en          <= 1'b0;
+-            auto_cnt              <= 32'd0;
+-            img_found_count       <= 3'd0;
+-            img_idx               <= 2'd0;
+-            load_idx              <= 2'd0;
+-            pending_buf_idx       <= 2'd0;
+-            write_buf_idx         <= 2'd0;
+-            disp_buf_idx          <= 2'd0;
+-            img_sector0           <= 32'd0;
+-            img_sector1           <= 32'd0;
+-            img_sector2           <= 32'd0;
+-            img_sector3           <= 32'd0;
+-            next_req_pending      <= 1'b0;
+-            load_busy             <= 1'b0;
+-            source_done_seen      <= 1'b0;
+-            display_valid         <= 1'b0;
++            load_sector <= 0;
++            scan_kicked <= 0;
++            first_image_committed <= 0;
++            auto_play_en <= 0;
++            img_found_count <= 0;
++            img_idx <= 0;
++            load_idx <= 0;
++            pending_buf_idx <= 0;
++            write_buf_idx <= 0;
++            disp_buf_idx <= 0;
++            img_sector0 <= 0;
++            img_sector1 <= 0;
++            img_sector2 <= 0;
++            img_sector3 <= 0;
++            pending_request <= REQ_NONE;
++            period_index <= 0;
++            load_busy <= 0;
++            source_started_seen <= 0;
++            source_done_seen <= 0;
++            write_done_seen <= 0;
++            display_valid <= 0;
+         end else begin
+-            // 扫描阶段缓存前 4 张图的起始 sector
+-            if (scan_found_valid) begin
++            if (scan_found_valid && img_found_count < 4) begin
+                 case (img_found_count)
+-                    3'd0: img_sector0 <= scan_found_sector;
+-                    3'd1: img_sector1 <= scan_found_sector;
+-                    3'd2: img_sector2 <= scan_found_sector;
+-                    3'd3: img_sector3 <= scan_found_sector;
++                    0: img_sector0 <= scan_found_sector;
++                    1: img_sector1 <= scan_found_sector;
++                    2: img_sector2 <= scan_found_sector;
++                    3: img_sector3 <= scan_found_sector;
+                     default: ;
+                 endcase
+-
+-                if (img_found_count < 3'd4)
+-                    img_found_count <= img_found_count + 3'd1;
++                img_found_count <= img_found_count + 1'b1;
+             end
+ 
+-            // 记住 bmp_read 已经把源图送完 FIFO，但还不能切显示，得等整帧写完
+-            if (load_busy && bmp_ready)
+-                source_done_seen <= 1'b1;
+-
+-            // 只有真正收到 write_finish_toggle 脉冲，才提交新图并切换显示缓冲区
+-            if (load_busy && source_done_seen && write_finish_pulse) begin
+-                load_busy             <= 1'b0;
+-                source_done_seen      <= 1'b0;
+-                disp_buf_idx          <= pending_buf_idx;
+-                img_idx               <= load_idx;
+-                display_valid         <= 1'b1;
+-                first_image_committed <= 1'b1;
++            if (load_busy) begin
++                if (!bmp_ready) source_started_seen <= 1;
++                if (source_started_seen && bmp_ready) source_done_seen <= 1;
++                if (write_finish_pulse) write_done_seen <= 1;
+             end
+-
+-            // 上电后自动发起一次“扫描前 4 张 BMP”
++            if (frame_complete) begin
++                load_busy <= 0;
++                source_started_seen <= 0;
++                source_done_seen <= 0;
++                write_done_seen <= 0;
++                disp_buf_idx <= pending_buf_idx;
++                img_idx <= load_idx;
++                display_valid <= 1;
++                first_image_committed <= 1;
++            end
++
+             if (!scan_kicked && bmp_ready) begin
+-                scan_start_pulse      <= 1'b1;
+-                scan_kicked           <= 1'b1;
+-                first_image_committed <= 1'b0;
+-                auto_play_en          <= 1'b0;
+-                auto_cnt              <= 32'd0;
+-                img_found_count       <= 3'd0;
+-                img_idx               <= 2'd0;
+-                load_idx              <= 2'd0;
+-                pending_buf_idx       <= 2'd0;
+-                write_buf_idx         <= 2'd0;
+-                disp_buf_idx          <= 2'd0;
+-                next_req_pending      <= 1'b0;
+-                display_valid         <= 1'b0;
+-                load_busy             <= 1'b0;
+-                source_done_seen      <= 1'b0;
++                scan_start_pulse <= 1;
++                scan_kicked <= 1;
+             end else begin
+-                // 忙的时候也只记 1 次“下一张”请求，不会累积成连跳两张
+-                if (key_next_press && scan_done && (img_found_count > 3'd0))
+-                    next_req_pending <= 1'b1;
+-
+-                // 自动播放开/关
+-                if (key_auto_press && scan_done && (img_found_count > 3'd1)) begin
++                if (scan_done && cycle_period_event)
++                    period_index <= (period_index == 2) ? 0 : period_index + 1'b1;
++                if (img_found_count <= 1)
++                    auto_play_en <= 0;
++                else if (scan_done && toggle_auto_event)
+                     auto_play_en <= ~auto_play_en;
+-                    auto_cnt     <= 32'd0;
+-                end
+-
+-                // 自动播放 1s 计数：只有当前没有写图任务时才计时
+-                if (scan_done && auto_play_en && display_valid && !load_busy && first_image_committed && (img_found_count > 3'd1)) begin
+-                    if (auto_tick)
+-                        auto_cnt <= 32'd0;
+-                    else
+-                        auto_cnt <= auto_cnt + 32'd1;
+-                end else begin
+-                    auto_cnt <= 32'd0;
+-                end
+-
+-                // 首图自动加载到 buffer0
+-                if (scan_done && !first_image_committed && bmp_ready && !load_busy && (img_found_count != 3'd0)) begin
+-                    load_idx         <= 2'd0;
+-                    load_sector      <= img_sector0;
+-                    pending_buf_idx  <= 2'd0;
+-                    write_buf_idx    <= 2'd0;
+-                    load_start_pulse <= 1'b1;
+-                    load_busy        <= 1'b1;
+-                    source_done_seen <= 1'b0;
+-                    next_req_pending <= 1'b0;
+-                    auto_cnt         <= 32'd0;
+-                end
+-                // 手动下一张优先：写到“非当前显示”的另一块 buffer
+-                else if (scan_done && bmp_ready && display_valid && !load_busy && next_req_pending && (img_found_count != 3'd0)) begin
+-                    load_idx         <= next_from_current;
+-                    load_sector      <= sector_lut(next_from_current);
+-                    pending_buf_idx  <= next_buf_lut(disp_buf_idx, display_valid);
+-                    write_buf_idx    <= next_buf_lut(disp_buf_idx, display_valid);
+-                    load_start_pulse <= 1'b1;
+-                    load_busy        <= 1'b1;
+-                    source_done_seen <= 1'b0;
+-                    next_req_pending <= 1'b0;
+-                    auto_cnt         <= 32'd0;
+-                end
+-                // 自动播放下一张：同样写到“非当前显示”的另一块 buffer
+-                else if (scan_done && bmp_ready && display_valid && !load_busy && auto_play_en && auto_tick && (img_found_count > 3'd1)) begin
+-                    load_idx         <= next_from_current;
+-                    load_sector      <= sector_lut(next_from_current);
+-                    pending_buf_idx  <= next_buf_lut(disp_buf_idx, display_valid);
+-                    write_buf_idx    <= next_buf_lut(disp_buf_idx, display_valid);
+-                    load_start_pulse <= 1'b1;
+-                    load_busy        <= 1'b1;
+-                    source_done_seen <= 1'b0;
+-                    auto_cnt         <= 32'd0;
++
++                if (!can_navigate)
++                    pending_request <= REQ_NONE;
++                else if (next_event || prev_event)
++                    pending_request <= requested_direction;
++
++                if (scan_done && !first_image_committed && bmp_ready &&
++                    !load_busy && img_found_count != 0) begin
++                    load_idx <= 0;
++                    load_sector <= img_sector0;
++                    pending_buf_idx <= 0;
++                    write_buf_idx <= 0;
++                    load_start_pulse <= 1;
++                    load_busy <= 1;
++                    source_started_seen <= 0;
++                    source_done_seen <= 0;
++                    write_done_seen <= 0;
++                    pending_request <= REQ_NONE;
++                end else if (can_navigate && bmp_ready && !load_busy &&
++                             !interaction_active && requested_direction != REQ_NONE) begin
++                    load_idx <= target_idx;
++                    load_sector <= sector_lut(target_idx);
++                    pending_buf_idx <= {1'b0, ~disp_buf_idx[0]};
++                    write_buf_idx <= {1'b0, ~disp_buf_idx[0]};
++                    load_start_pulse <= 1;
++                    load_busy <= 1;
++                    source_started_seen <= 0;
++                    source_done_seen <= 0;
++                    write_done_seen <= 0;
++                    pending_request <= REQ_NONE;
++                end else if (timer_enable && bmp_ready && auto_due) begin
++                    load_idx <= adjacent_index(img_idx, img_found_count, 1'b0);
++                    load_sector <= sector_lut(adjacent_index(img_idx, img_found_count, 1'b0));
++                    pending_buf_idx <= {1'b0, ~disp_buf_idx[0]};
++                    write_buf_idx <= {1'b0, ~disp_buf_idx[0]};
++                    load_start_pulse <= 1;
++                    load_busy <= 1;
++                    source_started_seen <= 0;
++                    source_done_seen <= 0;
++                    write_done_seen <= 0;
+                 end
+             end
+         end
+@@ -347,49 +323,3 @@
+ );
+ 
+ endmodule
+-
+-module key_press_debounce #(
+-    parameter integer CLK_FREQ_HZ = 100_000_000,
+-    parameter integer DEBOUNCE_MS = 20
+-)(
+-    input  wire clk,
+-    input  wire rst,
+-    input  wire button_in,    // 默认：松开=1，按下=0
+-    output reg  press_pulse
+-);
+-
+-localparam integer DEBOUNCE_CYCLES = (CLK_FREQ_HZ / 1000) * DEBOUNCE_MS;
+-
+-reg button_sync0;
+-reg button_sync1;
+-reg button_stable;
+-reg [31:0] cnt;
+-
+-always @(posedge clk or posedge rst) begin
+-    if (rst) begin
+-        button_sync0  <= 1'b1;
+-        button_sync1  <= 1'b1;
+-        button_stable <= 1'b1;
+-        cnt           <= 32'd0;
+-        press_pulse   <= 1'b0;
+-    end else begin
+-        button_sync0 <= button_in;
+-        button_sync1 <= button_sync0;
+-        press_pulse  <= 1'b0;
+-
+-        if (button_sync1 == button_stable) begin
+-            cnt <= 32'd0;
+-        end else begin
+-            if (cnt >= DEBOUNCE_CYCLES - 1) begin
+-                if (button_stable && !button_sync1)
+-                    press_pulse <= 1'b1;
+-                button_stable <= button_sync1;
+-                cnt           <= 32'd0;
+-            end else begin
+-                cnt <= cnt + 32'd1;
+-            end
+-        end
+-    end
+-end
+-
+-endmodule
+--- before/src/user_source/hdl_source/top_tf_hdmi_audio.v
++++ after/src/user_source/hdl_source/top_tf_hdmi_audio.v
+@@ -2,8 +2,8 @@
+ module top(
+     input                       clk,
+     input                       rst_n,
+-    input                       key1,           // 手动下一张
+-    input                       key2,           // 自动播放 开/关
++    input                       key1,           // 短按下一张；长按调周期
++    input                       key2,           // 短按轮播开关；长按上一张
+ 
+     output [5:0]                seg_sel,
+     output [7:0]                seg_data,
+@@ -51,7 +51,11 @@
+ wire        display_valid;
+ 
+ wire [3:0]  state_code;
+-wire [6:0]  seg_data_0;
++wire [2:0] picture_number, picture_count;
++wire auto_enabled, player_loading, scan_complete;
++wire [3:0] period_seconds;
++wire [7:0] status_digit0, status_digit1, status_digit2;
++wire [7:0] status_digit3, status_digit4, status_digit5;
+ 
+ wire        video_read_req;
+ wire        video_read_req_ack;
+@@ -162,6 +166,12 @@
+     .bmp_width         (16'd640),
+     .bmp_height        (16'd480),
+     .display_valid     (display_valid),
++    .picture_number    (picture_number),
++    .picture_count     (picture_count),
++    .auto_enabled      (auto_enabled),
++    .period_seconds    (period_seconds),
++    .loading           (player_loading),
++    .scan_complete     (scan_complete),
+ 
+     .write_finish_toggle(frame_write_toggle_mem),
+     .write_buf_idx     (write_buf_idx),
+@@ -177,22 +187,22 @@
+     .SD_MISO           (sd_miso)
+ );
+ 
+-seg_decoder seg_decoder_m0(
+-    .bin_data          (state_code),
+-    .seg_data          (seg_data_0)
+-);
+-
+-seg_scan seg_scan_m0(
+-    .clk               (clk),
+-    .rst_n             (rst_n),
+-    .seg_sel           (seg_sel),
+-    .seg_data          (seg_data),
+-    .seg_data_0        ({1'b1,7'b1111_111}),
+-    .seg_data_1        ({1'b1,7'b1111_111}),
+-    .seg_data_2        ({1'b1,7'b1111_111}),
+-    .seg_data_3        ({1'b1,7'b1111_111}),
+-    .seg_data_4        ({1'b1,7'b1111_111}),
+-    .seg_data_5        ({1'b1,seg_data_0})
++// Keep status encoding and six-digit scan in the controller clock domain.
++player_status_display u_player_status_display(
++    .display_valid(display_valid), .scan_complete(scan_complete),
++    .loading(player_loading), .picture_number(picture_number),
++    .picture_count(picture_count), .auto_enabled(auto_enabled),
++    .period_seconds(period_seconds), .source_state(state_code),
++    .digit0(status_digit0), .digit1(status_digit1), .digit2(status_digit2),
++    .digit3(status_digit3), .digit4(status_digit4), .digit5(status_digit5)
++);
++
++seg_scan #(.CLK_FREQ(100_000_000)) seg_scan_m0(
++    .clk(sd_card_clk), .rst_n(~rst_all),
++    .seg_sel(seg_sel), .seg_data(seg_data),
++    .seg_data_0(status_digit0), .seg_data_1(status_digit1),
++    .seg_data_2(status_digit2), .seg_data_3(status_digit3),
++    .seg_data_4(status_digit4), .seg_data_5(status_digit5)
+ );
+ 
+ // ===================== 原图像时序与帧缓存 =====================
+--- before/src/td_project/HDMI1.4b_Transmitter_v1.0.al
++++ after/src/td_project/HDMI1.4b_Transmitter_v1.0.al
+@@ -1,5 +1,5 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+-<Project Version="3" Minor="2" Path="C:/Users/23774/Desktop/ANlu/task_one/HX4S20_Contest_202606/7_lab_ex_2026_nosoft/anlu1/lab_ex5_i2s/src/td_project">
++<Project Version="3" Minor="2" Path="C:/Users/23774/Desktop/ANlu/task_one/完赛系列/lab_ex5_i2s/src/td_project">
+     <Project_Created_Time></Project_Created_Time>
+     <TD_Version>6.2.168116</TD_Version>
+     <Name>HDMI1.4b_Transmitter_v1.0</Name>
+@@ -296,6 +296,22 @@
+                     <Attr Name="UsedInP&R" Val="true"/>
+                     <Attr Name="BelongTo" Val="design_1"/>
+                     <Attr Name="CompileOrder" Val="43"/>
++                </FileInfo>
++            </File>
++            <File Path="../user_source/hdl_source/key_events.v">
++                <FileInfo>
++                    <Attr Name="UsedInSyn" Val="true"/>
++                    <Attr Name="UsedInP&R" Val="true"/>
++                    <Attr Name="BelongTo" Val="design_1"/>
++                    <Attr Name="CompileOrder" Val="50"/>
++                </FileInfo>
++            </File>
++            <File Path="../user_source/hdl_source/player_status_display.v">
++                <FileInfo>
++                    <Attr Name="UsedInSyn" Val="true"/>
++                    <Attr Name="UsedInP&R" Val="true"/>
++                    <Attr Name="BelongTo" Val="design_1"/>
++                    <Attr Name="CompileOrder" Val="51"/>
+                 </FileInfo>
+             </File>
+         </Verilog>
+--- before/src/user_source/hdl_source/key_events.v
++++ after/src/user_source/hdl_source/key_events.v
+@@ -0,0 +1,119 @@
++// Two active-low keys; all logic stays in clk domain.
++// KEY1: short=next, long=cycle period. KEY2: short=auto, long=previous.
++module key_events #(
++    parameter integer CLK_FREQ_HZ = 100_000_000,
++    parameter integer DEBOUNCE_MS = 20,
++    parameter integer LONG_PRESS_MS = 1000
++)(
++    input wire clk,
++    input wire rst,
++    input wire key1_n,
++    input wire key2_n,
++    output reg next_event,
++    output reg prev_event,
++    output reg toggle_auto_event,
++    output reg cycle_period_event,
++    output wire interaction_active
++);
++localparam integer DB_CYCLES = ((CLK_FREQ_HZ / 1000) * DEBOUNCE_MS > 0)
++                            ? (CLK_FREQ_HZ / 1000) * DEBOUNCE_MS : 1;
++localparam integer HOLD_CYCLES = ((CLK_FREQ_HZ / 1000) * LONG_PRESS_MS > 0)
++                              ? (CLK_FREQ_HZ / 1000) * LONG_PRESS_MS : 1;
++localparam integer DB_BITS = $clog2(DB_CYCLES + 4);
++localparam integer HOLD_BITS = (HOLD_CYCLES < 2) ? 1 : $clog2(HOLD_CYCLES + 1);
++
++reg [1:0] key_meta, key_sync, stable;
++reg [DB_BITS-1:0] db_count [0:1];
++reg [HOLD_BITS-1:0] hold_count [0:1];
++reg [1:0] pressed, long_fired;
++reg blocked;
++reg [DB_BITS-1:0] release_count;
++integer k;
++
++// Include synchronized raw state so auto play pauses during debounce as well.
++assign interaction_active = blocked || (key_sync != 2'b11) || (stable != 2'b11);
++
++always @(posedge clk or posedge rst) begin
++    if (rst) begin
++        key_meta <= 2'b11;
++        key_sync <= 2'b11;
++        stable <= 2'b11;
++        for (k = 0; k < 2; k = k + 1)
++            db_count[k] <= 0;
++    end else begin
++        key_meta <= {key2_n, key1_n};
++        key_sync <= key_meta;
++        for (k = 0; k < 2; k = k + 1) begin
++            if (key_sync[k] == stable[k])
++                db_count[k] <= 0;
++            else if (db_count[k] >= DB_CYCLES - 1) begin
++                stable[k] <= key_sync[k];
++                db_count[k] <= 0;
++            end else
++                db_count[k] <= db_count[k] + 1'b1;
++        end
++    end
++end
++
++integer j;
++always @(posedge clk or posedge rst) begin
++    if (rst) begin
++        next_event <= 0;
++        prev_event <= 0;
++        toggle_auto_event <= 0;
++        cycle_period_event <= 0;
++        pressed <= 0;
++        long_fired <= 0;
++        blocked <= 1;
++        release_count <= 0;
++        for (j = 0; j < 2; j = j + 1)
++            hold_count[j] <= 0;
++    end else begin
++        next_event <= 0;
++        prev_event <= 0;
++        toggle_auto_event <= 0;
++        cycle_period_event <= 0;
++
++        // Power-on/overlap guard: release both keys before accepting another gesture.
++        if (blocked || stable == 2'b00) begin
++            blocked <= 1;
++            pressed <= 0;
++            long_fired <= 0;
++            hold_count[0] <= 0;
++            hold_count[1] <= 0;
++            // Require an additional released window after the synchronizer fills.
++            if (key_sync == 2'b11 && stable == 2'b11) begin
++                if (release_count >= DB_CYCLES + 2) begin
++                    blocked <= 0;
++                    release_count <= 0;
++                end else
++                    release_count <= release_count + 1'b1;
++            end else
++                release_count <= 0;
++        end else begin
++            release_count <= 0;
++            for (j = 0; j < 2; j = j + 1) begin
++                if (!stable[j]) begin
++                    pressed[j] <= 1;
++                    if (!long_fired[j]) begin
++                        if (hold_count[j] >= HOLD_CYCLES - 1) begin
++                            long_fired[j] <= 1;
++                            if (j == 0) cycle_period_event <= 1;
++                            else prev_event <= 1;
++                        end else
++                            hold_count[j] <= hold_count[j] + 1'b1;
++                    end
++                end else begin
++                    if (pressed[j] && !long_fired[j]) begin
++                        if (j == 0) next_event <= 1;
++                        else toggle_auto_event <= 1;
++                    end
++                    pressed[j] <= 0;
++                    long_fired[j] <= 0;
++                    hold_count[j] <= 0;
++                end
++            end
++        end
++    end
++end
++endmodule
+--- before/src/user_source/hdl_source/player_status_display.v
++++ after/src/user_source/hdl_source/player_status_display.v
+@@ -0,0 +1,49 @@
++// Segment encoding follows the existing six-digit board constraints.
++// Slot 0..5: picture, count, A/H, period tens, period units, source state.
++// Picture dot = image loading; source state dot = scan finished with no pictures.
++module player_status_display(
++    input wire display_valid,
++    input wire scan_complete,
++    input wire loading,
++    input wire [2:0] picture_number,
++    input wire [2:0] picture_count,
++    input wire auto_enabled,
++    input wire [3:0] period_seconds,
++    input wire [3:0] source_state,
++    output wire [7:0] digit0,
++    output wire [7:0] digit1,
++    output wire [7:0] digit2,
++    output wire [7:0] digit3,
++    output wire [7:0] digit4,
++    output wire [7:0] digit5
++);
++function [6:0] hex_segments;
++    input [3:0] value;
++    begin
++        case (value)
++            0: hex_segments = 7'b1000000;
++            1: hex_segments = 7'b1111001;
++            2: hex_segments = 7'b0100100;
++            3: hex_segments = 7'b0110000;
++            4: hex_segments = 7'b0011001;
++            5: hex_segments = 7'b0010010;
++            6: hex_segments = 7'b0000010;
++            7: hex_segments = 7'b1111000;
++            8: hex_segments = 7'b0000000;
++            9: hex_segments = 7'b0010000;
++            10: hex_segments = 7'b0001000;
++            11: hex_segments = 7'b0000011;
++            12: hex_segments = 7'b1000110;
++            13: hex_segments = 7'b0100001;
++            14: hex_segments = 7'b0000110;
++            default: hex_segments = 7'b0001110;
++        endcase
++    end
++endfunction
++assign digit0 = {~loading, display_valid ? hex_segments({1'b0, picture_number}) : 7'b0111111};
++assign digit1 = {1'b1, hex_segments({1'b0, picture_count})};
++assign digit2 = {1'b1, auto_enabled ? 7'b0001000 : 7'b0001001}; // A / H(hand)
++assign digit3 = {1'b1, hex_segments(period_seconds == 10 ? 4'd1 : 4'd0)};
++assign digit4 = {1'b1, hex_segments(period_seconds == 10 ? 4'd0 : period_seconds)};
++assign digit5 = {~(scan_complete && picture_count == 0), hex_segments(source_state)};
++endmodule
